@@ -20,6 +20,16 @@
     "description": "DbGate Database Manager"
   },
   {
+    "service": "mailhog",
+    "port": 8025,
+    "description": "MailHog Web UI"
+  },
+  {
+    "service": "mailhog-smtp",
+    "port": 1025,
+    "description": "MailHog SMTP Server"
+  },
+  {
     "service": "mariadb",
     "port": 3306,
     "description": "MariaDB Database Server"

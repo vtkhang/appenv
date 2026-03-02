@@ -9,6 +9,7 @@ This project provides a comprehensive Docker-based development environment for P
 - **Management Tools**:
   - **phpMyAdmin**: Web-based MySQL/MariaDB management.
   - **DbGate**: A versatile database manager for various database types.
+  - **MailHog**: Email testing tool (Web UI: 8025, SMTP: 1025).
 - **CLI Tools (within PHP containers)**:
   - **Composer**: PHP dependency manager.
   - **Node.js (LTS)** and **NPM** (managed via NVM).

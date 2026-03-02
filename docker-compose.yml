@@ -49,6 +49,14 @@ services:
     volumes:
       - dbgate-data:/root/.dbgate
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    restart: always
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
   mariadb:
     image: mariadb:10.4.21
     container_name: mariadb

@@ -7,6 +7,7 @@
 *   *Dual PHP Environments*: Run and test applications simultaneously on *PHP 7.4* and *PHP 8.2* using dedicated Apache containers.
 *   *AI-First Terminal*: Pre-integrated with *Gemini CLI*, *OpenCode CLI*, and *Factory AI CLI* to power your terminal-based AI workflows.
 *   *Advanced Database Management*: Includes *MariaDB 10.4*, *phpMyAdmin* (with arbitrary host support), and *DbGate* for a versatile data management experience.
+*   *Email Testing*: *MailHog* captures all outgoing emails for local inspection.
 *   *Zero-Pollution Vhosts*: A dedicated `vhosts/` directory allows you to host any external project via symlinks without cluttering the core repository.
 *   *Path Mirroring*: Automatically mirrors `${HOME}/repos/src` into the containers, ensuring that absolute symlinks work perfectly across different machines.
 *   *Smart Port Registry*: Built-in tracking of all allocated ports via `ports.json` and a web-based registry.
@@ -26,6 +27,7 @@ The environment is built for portability and cleanliness. By using an Apache *Al
 2.  **Access Database Management Tools:**
     *   **phpMyAdmin:** Open <http://localhost:8080> and enter the MySQL/MariaDB server host (`mariadb`), username (`root`), and password (`root`).
     *   **DbGate:** Open <http://localhost:3001> to manage various database types.
+    *   **MailHog:** Open <http://localhost:8025> to view captured emails.
 
 3.  **MariaDB Connection Details:**
     *   **Host:** `mariadb` (within Docker network) or `localhost` (from your machine)
@@ -35,12 +37,17 @@ The environment is built for portability and cleanliness. By using an Apache *Al
     *   **Default User:** `db_user`
     *   **Default Password:** `db_pass`
 
-4.  **View logs:**
+4.  **MailHog SMTP Settings:**
+    *   **Host:** `mailhog` (within Docker network) or `localhost` (from your machine)
+    *   **Port:** `1025`
+    *   **Encryption:** None / Cleartext
+
+5.  **View logs:**
     ```bash
     docker compose logs -f
     ```
 
-5.  **Stop the environment:**
+6.  **Stop the environment:**
     ```bash
     docker compose down
     ```
