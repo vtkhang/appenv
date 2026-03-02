@@ -1,0 +1,18 @@
+# Docker
+.env
+vhosts/
+mariadb-data/
+dbgate-data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PHP
+vendor/
+composer.lock
+.phpunit.result.cache
+
+# Node
+node_modules/
+npm-debug.log

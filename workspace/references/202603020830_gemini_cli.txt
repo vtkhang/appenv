@@ -1,0 +1,38 @@
+Gemini CLI documentation
+
+Copy as Markdown
+Gemini CLI brings the power of Gemini models directly into your terminal. Use it to understand code, automate tasks, and build workflows with your local project context.
+
+Install
+Terminal window
+npm install -g @google/gemini-cli
+Choose your authentication method
+Select the authentication method that matches your situation in the table below:
+
+User Type / Scenario	Recommended Authentication Method	Google Cloud Project Required
+User Type / Scenario	Recommended Authentication Method	Google Cloud Project Required
+Individual Google accounts	Login with Google	No, with exceptions
+What is my Google account type?
+Individual Google accounts: Includes all free tier accounts such as Gemini Code Assist for individuals, as well as paid subscriptions for Google AI Pro and Ultra.
+(Recommended) Login with Google
+If you run Gemini CLI on your local machine, the simplest authentication method is logging in with your Google account. This method requires a web browser on a machine that can communicate with the terminal running Gemini CLI (e.g., your local machine).
+
+Important: If you are a Google AI Pro or Google AI Ultra subscriber, use the Google account associated with your subscription.
+
+To authenticate and use Gemini CLI:
+
+Start the CLI:
+
+Terminal window
+gemini
+
+Select Login with Google. Gemini CLI opens a login prompt using your web browser. Follow the on-screen instructions. Your credentials will be cached locally for future sessions.
+
+
+Download OpenCode
+Available in Beta for macOS, Windows, and Linux
+
+Download for Linux
+[1] OpenCode Terminal
+
+curl -fsSL https://opencode.ai/install | bash

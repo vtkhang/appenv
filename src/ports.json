@@ -1,0 +1,27 @@
+[
+  {
+    "service": "php74",
+    "port": 8074,
+    "description": "PHP 7.4 Apache"
+  },
+  {
+    "service": "php82",
+    "port": 8082,
+    "description": "PHP 8.2 Apache"
+  },
+  {
+    "service": "phpmyadmin",
+    "port": 8080,
+    "description": "phpMyAdmin Web Interface"
+  },
+  {
+    "service": "dbgate",
+    "port": 3001,
+    "description": "DbGate Database Manager"
+  },
+  {
+    "service": "mariadb",
+    "port": 3306,
+    "description": "MariaDB Database Server"
+  }
+]

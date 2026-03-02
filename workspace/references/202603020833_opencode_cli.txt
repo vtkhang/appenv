@@ -1,0 +1,9 @@
+
+Download OpenCode
+Available in Beta for macOS, Windows, and Linux
+
+Download for Linux
+[1] OpenCode Terminal
+
+curl -fsSL https://opencode.ai/install | bash
+npm i -g opencode-ai
