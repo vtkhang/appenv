@@ -10,7 +10,7 @@
 *   *Zero-Pollution Vhosts*: A dedicated `vhosts/` directory allows you to host any external project via symlinks without cluttering the core repository.
 *   *Path Mirroring*: Automatically mirrors `${HOME}/repos/src` into the containers, ensuring that absolute symlinks work perfectly across different machines.
 *   *Smart Port Registry*: Built-in tracking of all allocated ports via `ports.json` and a web-based registry.
-*   *Node.js Ecosystem*: Full *NVM* integration with the latest *Node.js LTS* and *NPM* pre-installed.
+*   *Node.js & PHP Ecosystem*: Full *NVM* integration with *Node.js LTS*, *NPM*, and *Composer* pre-installed.
 
 ## 🛠 Architecture
 

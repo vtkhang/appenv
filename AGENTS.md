@@ -10,6 +10,7 @@ This project provides a comprehensive Docker-based development environment for P
   - **phpMyAdmin**: Web-based MySQL/MariaDB management.
   - **DbGate**: A versatile database manager for various database types.
 - **CLI Tools (within PHP containers)**:
+  - **Composer**: PHP dependency manager.
   - **Node.js (LTS)** and **NPM** (managed via NVM).
   - **Gemini CLI** (`gemini`): For AI-powered terminal workflows.
   - **OpenCode CLI** (`opencode`).

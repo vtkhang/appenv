@@ -18,6 +18,9 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 # Install NVM and Node.js (LTS)
 ENV NVM_DIR /usr/local/nvm
 RUN mkdir -p $NVM_DIR && \
