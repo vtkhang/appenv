@@ -1,24 +1,22 @@
-# PHP Docker Environment
+# 🚀 AppEnv: The AI-Ready, Multi-PHP Development Stack
 
-This setup provides two Apache services, each running a different PHP version:
+*AppEnv* is a high-performance, portable Docker environment designed for modern PHP developers. It combines legacy support with modern AI-assisted workflows, providing a seamless bridge between your host machine and containerized services.
 
-* **PHP 7.4 Apache** (Service: `php74`): Accessible at <http://localhost:8074>
-* **PHP 8.2 Apache** (Service: `php82`): Accessible at <http://localhost:8082>
-* **phpMyAdmin** (Service: `phpmyadmin`): Accessible at <http://localhost:8080>
-* **DbGate** (Service: `dbgate`): Accessible at <http://localhost:3001>
-* **MariaDB 10.4** (Service: `mariadb`): Accessible at `localhost:3306`
+## ✨ Key Features
 
-Both services share the same `src/` directory as their document root.
+*   *Dual PHP Environments*: Run and test applications simultaneously on *PHP 7.4* and *PHP 8.2* using dedicated Apache containers.
+*   *AI-First Terminal*: Pre-integrated with *Gemini CLI*, *OpenCode CLI*, and *Factory AI CLI* to power your terminal-based AI workflows.
+*   *Advanced Database Management*: Includes *MariaDB 10.4*, *phpMyAdmin* (with arbitrary host support), and *DbGate* for a versatile data management experience.
+*   *Zero-Pollution Vhosts*: A dedicated `vhosts/` directory allows you to host any external project via symlinks without cluttering the core repository.
+*   *Path Mirroring*: Automatically mirrors `${HOME}/repos/src` into the containers, ensuring that absolute symlinks work perfectly across different machines.
+*   *Smart Port Registry*: Built-in tracking of all allocated ports via `ports.json` and a web-based registry.
+*   *Node.js Ecosystem*: Full *NVM* integration with the latest *Node.js LTS* and *NPM* pre-installed.
 
-### CLI Tools
+## 🛠 Architecture
 
-The PHP containers include the following CLI tools:
-*   **Node.js (LTS)** & **NPM** (via NVM)
-*   **Gemini CLI** (`gemini`)
-*   **OpenCode CLI** (`opencode`)
-*   **Factory AI CLI** (`factory`)
+The environment is built for portability and cleanliness. By using an Apache *Alias* for the `vhosts` directory and mirroring the user's home path, it provides a "XAMPP-like" experience with the isolation and power of Docker.
 
-## How to use
+## 🚀 How to use
 
 1.  **Start the environment:**
     ```bash
@@ -47,7 +45,9 @@ The PHP containers include the following CLI tools:
     docker compose down
     ```
 
-## Customizing Extensions
+## 📄 License
+
+This project is open-sourced under the [MIT License](LICENSE).
 
 If you need to install PHP extensions (e.g., `mysqli`, `pdo_mysql`, `gd`), you can create custom Dockerfiles and update `docker-compose.yml`.
 
