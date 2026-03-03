@@ -3,10 +3,17 @@
 vhosts/
 mariadb-data/
 dbgate-data/
+caddy-data/
+caddy-config/
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Certificates
+*.crt
+*.key
+*.pem
 
 # PHP
 vendor/

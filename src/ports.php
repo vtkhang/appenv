@@ -42,15 +42,37 @@ if (isset($_GET['format']) && $_GET['format'] === 'json') {
         <thead>
             <tr>
                 <th>Service</th>
-                <th>Port (Host)</th>
+                <th>Proxy URL (HTTPS)</th>
+                <th>Direct Port (Fallback)</th>
                 <th>Description</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($ports as $p): ?>
+            <?php
+                $proxyUrl = "";
+                switch($p['service']) {
+                    case 'php74': $proxyUrl = "https://php74.localhost"; break;
+                    case 'php82': $proxyUrl = "https://php82.localhost"; break;
+                    case 'phpmyadmin': $proxyUrl = "https://pma.localhost"; break;
+                    case 'dbgate': $proxyUrl = "https://dbgate.localhost"; break;
+                    case 'mailhog': $proxyUrl = "https://mail.localhost"; break;
+                    default: $proxyUrl = "";
+                }
+                $directUrl = "http://localhost:" . $p['port'];
+            ?>
             <tr>
                 <td><strong><?php echo htmlspecialchars($p['service']); ?></strong></td>
-                <td><span class="port"><?php echo htmlspecialchars($p['port']); ?></span></td>
+                <td>
+                    <?php if ($proxyUrl): ?>
+                        <a href="<?php echo $proxyUrl; ?>" target="_blank" class="proxy-link">🔒 <?php echo $proxyUrl; ?></a>
+                    <?php else: ?>
+                        <em>Internal Only</em>
+                    <?php endif; ?>
+                </td>
+                <td>
+                    <a href="<?php echo $directUrl; ?>" target="_blank" class="fallback-link">🔌 :<?php echo htmlspecialchars($p['port']); ?></a>
+                </td>
                 <td><?php echo htmlspecialchars($p['description']); ?></td>
             </tr>
             <?php endforeach; ?>

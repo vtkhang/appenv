@@ -36,6 +36,13 @@ services:
     container_name: phpmyadmin
     environment:
       PMA_ARBITRARY: 1
+      PMA_HOST: mariadb
+      # This helps fix the "Failed to set session cookie" error behind a proxy
+      PMA_ABSOLUTE_URI: ./
+      # Increase upload limits for large imports
+      UPLOAD_LIMIT: 512M
+      MEMORY_LIMIT: 512M
+      MAX_EXECUTION_TIME: 600
     ports:
       - "8080:80"
     restart: always
@@ -71,6 +78,35 @@ services:
     volumes:
       - mariadb-data:/var/lib/mysql
 
+  caddy:
+    image: caddy:latest
+    container_name: caddy-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./selfsigned.crt:/etc/caddy/selfsigned.crt
+      - ./selfsigned.key:/etc/caddy/selfsigned.key
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - php82
+      - php74
+      - phpmyadmin
+      - dbgate
+      - mailhog
+    healthcheck:
+      test: ["CMD", "caddy", "api", "status"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
 volumes:
   dbgate-data:
   mariadb-data:
+  caddy-data:
+  caddy-config:

@@ -18,7 +18,7 @@ This project provides a comprehensive Docker-based development environment for P
   - **Factory AI CLI** (`factory`).
 
 ### Architecture:
-- Services are orchestrated using `docker-compose.yml`.
+- Services are orchestrated using `docker compose.yml`.
 - Both PHP services share the `./src` directory as their document root (`/var/www/html`).
 - Persistent data is stored in Docker volumes: `dbgate-data` and `mariadb-data`.
 
@@ -80,7 +80,7 @@ The environment is managed primarily via Docker Compose.
   - Programmatic access (JSON): `http://localhost:8082/ports.php?format=json`.
 
 ## Key Files:
-- `docker-compose.yml`: Main orchestration file for all services.
+- `docker compose.yml`: Main orchestration file for all services.
 - `php74.Dockerfile` & `php82.Dockerfile`: Custom images for PHP versions, including NVM and AI CLI tools.
 - `README.md`: Detailed usage instructions and connection details.
 - `src/index.php`: Default landing page and PHP info script.
