@@ -3,9 +3,11 @@ FROM php:8.2-apache
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
-# Update www-data user/group to match host
-RUN if [ $(getent group www-data) ]; then groupmod -g $GROUP_ID www-data; else groupadd -g $GROUP_ID www-data; fi \
-    && usermod -u $USER_ID -g $GROUP_ID www-data
+# Update www-data user/group to match host and set home directory
+RUN mkdir -p /home/www-data && \
+    if [ $(getent group www-data) ]; then groupmod -g $GROUP_ID www-data; else groupadd -g $GROUP_ID www-data; fi \
+    && usermod -u $USER_ID -g $GROUP_ID -d /home/www-data -s /bin/bash www-data && \
+    chown -R www-data:www-data /home/www-data
 
 # Ensure Apache can still write to its own directories
 RUN chown -R www-data:www-data /var/www/html /var/run/apache2 /var/log/apache2 /etc/apache2
@@ -14,11 +16,19 @@ RUN chown -R www-data:www-data /var/www/html /var/run/apache2 /var/log/apache2 /
 RUN apt-get update && apt-get install -y \
     curl \
     git \
+    ripgrep \
     unzip \
     gnupg \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    openssh-client \
+    && mkdir -p -m 755 /etc/apt/keyrings \
+    && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+    && apt-get update \
+    && apt-get install -y gh \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
