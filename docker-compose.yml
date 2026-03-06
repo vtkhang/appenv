@@ -1,5 +1,6 @@
 services:
   php74:
+    image: vtkhang/appenv:php74
     build:
       context: .
       dockerfile: php74.Dockerfile
@@ -16,6 +17,7 @@ services:
     restart: always
 
   php82:
+    image: vtkhang/appenv:php82
     build:
       context: .
       dockerfile: php82.Dockerfile
