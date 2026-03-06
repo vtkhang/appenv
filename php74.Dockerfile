@@ -16,7 +16,13 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     gnupg \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
     && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql mysqli mbstring xml exif
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -48,7 +54,8 @@ RUN . $NVM_DIR/nvm.sh && \
     curl -fsSL https://app.factory.ai/cli | sh
 
 # Configure Apache to Alias /vhosts to /var/www/vhosts
-RUN echo 'Alias /vhosts /var/www/vhosts' > /etc/apache2/conf-available/vhosts.conf && \
+RUN a2enmod rewrite && \
+    echo 'Alias /vhosts /var/www/vhosts' > /etc/apache2/conf-available/vhosts.conf && \
     echo '<Directory /var/www/vhosts>' >> /etc/apache2/conf-available/vhosts.conf && \
     echo '    Options Indexes FollowSymLinks' >> /etc/apache2/conf-available/vhosts.conf && \
     echo '    AllowOverride All' >> /etc/apache2/conf-available/vhosts.conf && \
