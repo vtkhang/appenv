@@ -1,5 +1,6 @@
 services:
   php74:
+    image: vtkhang/appenv:php74
     build:
       context: .
       dockerfile: php74.Dockerfile
@@ -13,9 +14,15 @@ services:
       - ./src:/var/www/html
       - ./vhosts:/var/www/vhosts
       - ${HOME}/repos/src:${HOME}/repos/src
+      - gemini-settings:/home/www-data/.gemini
+      - opencode-settings:/home/www-data/.opencode
+      - droid-settings:/home/www-data/.droid
+      - git-settings:/home/www-data/.config/git
+      - ssh-settings:/home/www-data/.ssh
     restart: always
 
   php82:
+    image: vtkhang/appenv:php82
     build:
       context: .
       dockerfile: php82.Dockerfile
@@ -29,6 +36,11 @@ services:
       - ./src:/var/www/html
       - ./vhosts:/var/www/vhosts
       - ${HOME}/repos/src:${HOME}/repos/src
+      - gemini-settings:/home/www-data/.gemini
+      - opencode-settings:/home/www-data/.opencode
+      - droid-settings:/home/www-data/.droid
+      - git-settings:/home/www-data/.config/git
+      - ssh-settings:/home/www-data/.ssh
     restart: always
 
   phpmyadmin:
@@ -110,3 +122,8 @@ volumes:
   mariadb-data:
   caddy-data:
   caddy-config:
+  gemini-settings:
+  opencode-settings:
+  droid-settings:
+  git-settings:
+  ssh-settings:
