@@ -90,8 +90,24 @@ services:
     volumes:
       - mariadb-data:/var/lib/mysql
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis-sessions
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   caddy:
-    image: caddy:latest
+    build:
+      context: .
+      dockerfile: caddy.Dockerfile
     container_name: caddy-proxy
     restart: always
     ports:
@@ -110,8 +126,9 @@ services:
       - phpmyadmin
       - dbgate
       - mailhog
+      - redis
     healthcheck:
-      test: ["CMD", "caddy", "api", "status"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:2019/config/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -122,6 +139,7 @@ volumes:
   mariadb-data:
   caddy-data:
   caddy-config:
+  redis-data:
   gemini-settings:
   opencode-settings:
   droid-settings:

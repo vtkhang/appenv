@@ -35,6 +35,18 @@ RUN apt-get update && apt-get install -y \
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql mysqli mbstring xml exif
 
+# Install Redis PHP extension
+RUN pecl install redis-5.3.7 \
+    && docker-php-ext-enable redis
+
+# Configure PHP to use Redis for sessions
+RUN echo "session.save_handler = redis" > /usr/local/etc/php/conf.d/session-redis.ini && \
+    echo "session.save_path = \"tcp://redis:6379\"" >> /usr/local/etc/php/conf.d/session-redis.ini && \
+    echo "session.cookie_domain = .localhost" >> /usr/local/etc/php/conf.d/session-redis.ini && \
+    echo "session.cookie_path = /" >> /usr/local/etc/php/conf.d/session-redis.ini && \
+    echo "session.cookie_samesite = Lax" >> /usr/local/etc/php/conf.d/session-redis.ini && \
+    echo "session.cookie_httponly = On" >> /usr/local/etc/php/conf.d/session-redis.ini
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -86,7 +98,5 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 
 # Set zsh as default shell for www-data and install Oh My Zsh
 RUN chsh -s /usr/bin/zsh www-data && \
-    mkdir -p /var/www && \
-    chown www-data:www-data /var/www && \
     su - www-data -s /bin/zsh -c 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended' && \
-    sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="josh"/' /var/www/.zshrc
+    sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="josh"/' /home/www-data/.zshrc

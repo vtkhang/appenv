@@ -1,45 +1,45 @@
 {
-    local_certs
+	local_certs
 }
 
 # The catch-all HTTPS listener for IP and localhost
 :443 {
-    tls /etc/caddy/selfsigned.crt /etc/caddy/selfsigned.key
-    
-    # Access phpMyAdmin via https://IP/pma/
-    handle_path /pma* {
-        reverse_proxy phpmyadmin:80
-    }
+	tls /etc/caddy/selfsigned.crt /etc/caddy/selfsigned.key
 
-    # Default to the service dashboard
-    handle {
-        rewrite * /ports.php
-        reverse_proxy php82:80
-    }
+	# Access phpMyAdmin via https://IP/pma/
+	handle_path /pma* {
+		reverse_proxy phpmyadmin:80
+	}
+
+	# Default to the service dashboard
+	handle {
+		rewrite * /ports.php
+		reverse_proxy php82:80
+	}
 }
 
 # Specific subdomains (still supported for localhost)
 php74.localhost {
-    tls internal
-    reverse_proxy php74:80
+	tls internal
+	reverse_proxy php74:80
 }
 
 php82.localhost {
-    tls internal
-    reverse_proxy php82:80
+	tls internal
+	reverse_proxy php82:80
 }
 
 pma.localhost {
-    tls internal
-    reverse_proxy phpmyadmin:80
+	tls internal
+	reverse_proxy phpmyadmin:80
 }
 
 dbgate.localhost {
-    tls internal
-    reverse_proxy dbgate:3000
+	tls internal
+	reverse_proxy dbgate:3000
 }
 
 mail.localhost {
-    tls internal
-    reverse_proxy mailhog:8025
+	tls internal
+	reverse_proxy mailhog:8025
 }
