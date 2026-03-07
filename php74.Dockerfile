@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    zsh \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -40,11 +41,16 @@ RUN mkdir -p $NVM_DIR && \
 # Using a wildcard to match any version installed under versions/node
 RUN ln -s $NVM_DIR/versions/node/$(ls $NVM_DIR/versions/node | head -n 1) $NVM_DIR/current
 ENV PATH $NVM_DIR/current/bin:$PATH
+ENV TERM xterm-256color
 
-# Set up environment variables for NVM in bashrc
+# Set up environment variables for NVM in bashrc and zshrc
 RUN echo "export NVM_DIR=\"$NVM_DIR\"" >> /etc/bash.bashrc && \
     echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> /etc/bash.bashrc && \
-    echo "[ -s \"$NVM_DIR/bash_completion\" ] && . \"$NVM_DIR/bash_completion\"" >> /etc/bash.bashrc
+    echo "[ -s \"$NVM_DIR/bash_completion\" ] && . \"$NVM_DIR/bash_completion\"" >> /etc/bash.bashrc && \
+    mkdir -p /etc/zsh && \
+    echo "export NVM_DIR=\"$NVM_DIR\"" >> /etc/zsh/zshrc && \
+    echo "[ -s \"$NVM_DIR/nvm.sh\" ] && . \"$NVM_DIR/nvm.sh\"" >> /etc/zsh/zshrc && \
+    echo "[ -s \"$NVM_DIR/bash_completion\" ] && . \"$NVM_DIR/bash_completion\"" >> /etc/zsh/zshrc
 
 # Install Gemini CLI, OpenCode CLI, and Factory AI CLI
 RUN . $NVM_DIR/nvm.sh && \
@@ -62,3 +68,15 @@ RUN a2enmod rewrite && \
     echo '    Require all granted' >> /etc/apache2/conf-available/vhosts.conf && \
     echo '</Directory>' >> /etc/apache2/conf-available/vhosts.conf && \
     a2enconf vhosts
+
+# Install Oh My Zsh for root and set theme to josh
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended && \
+    sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="josh"/' /root/.zshrc && \
+    chsh -s /usr/bin/zsh
+
+# Set zsh as default shell for www-data and install Oh My Zsh
+RUN chsh -s /usr/bin/zsh www-data && \
+    mkdir -p /var/www && \
+    chown www-data:www-data /var/www && \
+    su - www-data -s /bin/zsh -c 'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended' && \
+    sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="josh"/' /var/www/.zshrc
