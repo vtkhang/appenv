@@ -5,8 +5,8 @@ services:
       context: .
       dockerfile: php74.Dockerfile
       args:
-        USER_ID: 1000
-        GROUP_ID: 1000
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
     container_name: php74-apache
     ports:
       - "8074:80"
@@ -14,11 +14,11 @@ services:
       - ./src:/var/www/html
       - ./vhosts:/var/www/vhosts
       - ${HOME}/repos/src:${HOME}/repos/src
-      - gemini-settings:/home/www-data/.gemini
-      - opencode-settings:/home/www-data/.opencode
-      - droid-settings:/home/www-data/.droid
-      - git-settings:/home/www-data/.config/git
-      - ssh-settings:/home/www-data/.ssh
+      - ${HOME}/.gemini:/home/www-data/.gemini
+      - ${HOME}/.opencode:/home/www-data/.opencode
+      - ${HOME}/.factory:/home/www-data/.factory
+      - ${HOME}/.gitconfig:/home/www-data/.gitconfig
+      - ${HOME}/.ssh:/home/www-data/.ssh
     restart: always
 
   php82:
@@ -27,8 +27,8 @@ services:
       context: .
       dockerfile: php82.Dockerfile
       args:
-        USER_ID: 1000
-        GROUP_ID: 1000
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
     container_name: php82-apache
     ports:
       - "8082:80"
@@ -36,11 +36,11 @@ services:
       - ./src:/var/www/html
       - ./vhosts:/var/www/vhosts
       - ${HOME}/repos/src:${HOME}/repos/src
-      - gemini-settings:/home/www-data/.gemini
-      - opencode-settings:/home/www-data/.opencode
-      - droid-settings:/home/www-data/.droid
-      - git-settings:/home/www-data/.config/git
-      - ssh-settings:/home/www-data/.ssh
+      - ${HOME}/.gemini:/home/www-data/.gemini
+      - ${HOME}/.opencode:/home/www-data/.opencode
+      - ${HOME}/.factory:/home/www-data/.factory
+      - ${HOME}/.gitconfig:/home/www-data/.gitconfig
+      - ${HOME}/.ssh:/home/www-data/.ssh
     restart: always
 
   phpmyadmin:
@@ -49,6 +49,8 @@ services:
     environment:
       PMA_ARBITRARY: 1
       PMA_HOST: mariadb
+      PMA_USER: root
+      PMA_PASSWORD: admin
       # This helps fix the "Failed to set session cookie" error behind a proxy
       PMA_ABSOLUTE_URI: ./
       # Increase upload limits for large imports
@@ -81,10 +83,10 @@ services:
     container_name: mariadb
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: root
+      MARIADB_ROOT_PASSWORD: admin
       MARIADB_DATABASE: app_db
-      MARIADB_USER: db_user
-      MARIADB_PASSWORD: db_pass
+      MARIADB_USER: root
+      MARIADB_PASSWORD: admin
     ports:
       - "3306:3306"
     volumes:
@@ -128,7 +130,7 @@ services:
       - mailhog
       - redis
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:2019/config/ || exit 1"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://127.0.0.1:2019/config/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -140,8 +142,3 @@ volumes:
   caddy-data:
   caddy-config:
   redis-data:
-  gemini-settings:
-  opencode-settings:
-  droid-settings:
-  git-settings:
-  ssh-settings:

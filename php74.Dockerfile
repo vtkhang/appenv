@@ -10,7 +10,7 @@ RUN mkdir -p /home/www-data && \
     chown -R www-data:www-data /home/www-data
 
 # Ensure Apache can still write to its own directories
-RUN chown -R www-data:www-data /var/www/html /var/run/apache2 /var/log/apache2 /etc/apache2
+RUN mkdir -p /var/www/vhosts && chown -R www-data:www-data /var/www/html /var/www/vhosts /var/run/apache2 /var/log/apache2 /etc/apache2
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     zsh \
     openssh-client \
+    default-mysql-client \
     && mkdir -p -m 755 /etc/apt/keyrings \
     && curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor -o /etc/apt/keyrings/githubcli-archive-keyring.gpg \
     && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
@@ -81,14 +82,31 @@ RUN . $NVM_DIR/nvm.sh && \
     curl -fsSL https://opencode.ai/install | bash && \
     curl -fsSL https://app.factory.ai/cli | sh
 
-# Configure Apache to Alias /vhosts to /var/www/vhosts
+# Configure Apache to serve /var/www/html by default but fallback to /var/www/vhosts
 RUN a2enmod rewrite && \
-    echo 'Alias /vhosts /var/www/vhosts' > /etc/apache2/conf-available/vhosts.conf && \
+    echo 'RewriteEngine On' > /etc/apache2/conf-available/vhosts.conf && \
+    echo 'Alias /vhosts /var/www/vhosts' >> /etc/apache2/conf-available/vhosts.conf && \
+    # 1. If it's a known dashboard file, serve it from /var/www/html (DocumentRoot)
+    echo 'RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]' >> /etc/apache2/conf-available/vhosts.conf && \
+    echo 'RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d' >> /etc/apache2/conf-available/vhosts.conf && \
+    echo 'RewriteRule ^ - [L]' >> /etc/apache2/conf-available/vhosts.conf && \
+    # 2. If it's already an internal redirect to /var/www/vhosts, stop
+    echo 'RewriteCond %{REQUEST_URI} ^/var/www/vhosts' >> /etc/apache2/conf-available/vhosts.conf && \
+    echo 'RewriteRule ^ - [L]' >> /etc/apache2/conf-available/vhosts.conf && \
+    # 3. Otherwise, map the request to /var/www/vhosts/ and pass-through
+    echo 'RewriteRule ^/(.*) /var/www/vhosts/$1 [L,PT]' >> /etc/apache2/conf-available/vhosts.conf && \
     echo '<Directory /var/www/vhosts>' >> /etc/apache2/conf-available/vhosts.conf && \
     echo '    Options Indexes FollowSymLinks' >> /etc/apache2/conf-available/vhosts.conf && \
     echo '    AllowOverride All' >> /etc/apache2/conf-available/vhosts.conf && \
     echo '    Require all granted' >> /etc/apache2/conf-available/vhosts.conf && \
     echo '</Directory>' >> /etc/apache2/conf-available/vhosts.conf && \
+    echo '<Directory /home/varus/repos/src>' >> /etc/apache2/conf-available/vhosts.conf && \
+    echo '    Options Indexes FollowSymLinks' >> /etc/apache2/conf-available/vhosts.conf && \
+    echo '    AllowOverride All' >> /etc/apache2/conf-available/vhosts.conf && \
+    echo '    Require all granted' >> /etc/apache2/conf-available/vhosts.conf && \
+    echo '</Directory>' >> /etc/apache2/conf-available/vhosts.conf && \
+    a2enconf vhosts
+
     a2enconf vhosts
 
 # Install Oh My Zsh for root and set theme to josh
