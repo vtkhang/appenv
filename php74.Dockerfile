@@ -107,8 +107,6 @@ RUN a2enmod rewrite && \
     echo '</Directory>' >> /etc/apache2/conf-available/vhosts.conf && \
     a2enconf vhosts
 
-    a2enconf vhosts
-
 # Install Oh My Zsh for root and set theme to josh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended && \
     sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="josh"/' /root/.zshrc && \
